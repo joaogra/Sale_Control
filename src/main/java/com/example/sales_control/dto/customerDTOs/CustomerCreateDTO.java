@@ -1,4 +1,4 @@
-package com.example.sales_control.dto;
+package com.example.sales_control.dto.customerDTOs;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
