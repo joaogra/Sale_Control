@@ -8,7 +8,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -31,9 +36,9 @@ public class Sale {
     private Customer customer;
 
 
-    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<ProductSale> items;
+    private List<ProductSale> items = new ArrayList<>();
 
     @Column(name = "created_at")
     private Date createdAt;
@@ -44,6 +49,14 @@ public class Sale {
     @Column(name = "paid_amount")
     private Double paidAmount;
 
-
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "status_venda")
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private SaleStatus status;
+
+
+    public void addItem(ProductSale productSale) {
+        this.items.add(productSale);
+        productSale.setSale(this);
+    }
 }
